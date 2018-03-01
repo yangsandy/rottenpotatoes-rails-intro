@@ -17,6 +17,8 @@ class MoviesController < ApplicationController
     if(params[:ratings]!=nil)
       @cur_ratings=params[:ratings].keys
       # source: https://stackoverflow.com/questions/28954500/activerecord-where-field-array-of-possible-values
+      logger.debug "yes form"
+      logger.debug @cur_ratings[0]
       @movie=Movie.where('rating IN (?)', @cur_ratings)
     else
       logger.debug "no form"
@@ -24,8 +26,10 @@ class MoviesController < ApplicationController
     
     if (params[:sortby]!=nil)
       if @cur_ratings.empty?
+        logger.debug "regular search"
         @movies=Movie.order(params[:sortby])
       else
+        logger.debug "conditioned search"
         @movies=Movie.where('rating IN (?)', @cur_ratings).order(params[:sortby])
       end
     end
