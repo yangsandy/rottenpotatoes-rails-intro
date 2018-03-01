@@ -19,7 +19,7 @@ class MoviesController < ApplicationController
       # source: https://stackoverflow.com/questions/28954500/activerecord-where-field-array-of-possible-values
       logger.debug "yes form"
       logger.debug @cur_ratings[0]
-      @movie=Movie.where('rating IN (?)', @cur_ratings)
+      @movies=Movie.where('rating IN (?)', @cur_ratings)
     else
       logger.debug "no form"
     end
