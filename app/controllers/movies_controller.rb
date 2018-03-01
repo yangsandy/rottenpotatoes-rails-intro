@@ -34,7 +34,7 @@ class MoviesController < ApplicationController
       if session[:cur_ratings]==nil||session[:cur_ratings].empty?
         @movies=Movie.order(params[:sortby])
       else
-        @movies=Movie.where('rating IN (?)', session[:cur_ratings]).order(params[:sortby])
+        @movies=Movie.where('rating IN (?)', session[:cur_ratings]).order(session[:sortby])
       end
     end
   end
@@ -46,6 +46,7 @@ class MoviesController < ApplicationController
   def create
     @movie = Movie.create!(movie_params)
     flash[:notice] = "#{@movie.title} was successfully created."
+    flash.keep
     redirect_to movies_path
   end
 
@@ -58,6 +59,7 @@ class MoviesController < ApplicationController
     @movie.update_attributes!(movie_params)
     @cur_ratings=[]
     flash[:notice] = "#{@movie.title} was successfully updated."
+    flash.keep
     redirect_to movie_path(@movie)
   end
 
@@ -65,7 +67,7 @@ class MoviesController < ApplicationController
     @movie = Movie.find(params[:id])
     @movie.destroy
     flash[:notice] = "Movie '#{@movie.title}' deleted."
-    session.clear
+    flash.keep
     redirect_to movies_path
   end
   
