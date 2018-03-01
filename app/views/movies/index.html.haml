@@ -4,9 +4,10 @@
 %table#movies
   %thead
     %tr
-      %th Movie Title
+      -# Reference: https://stackoverflow.com/questions/15979489/give-a-haml-link-an-id
+      %a#title_header{:href => "/movies?sort=title"} Movie Title
       %th Rating
-      %th Release Date
+      %a#title_header{:href => "/movies?sort=release_date"} Release Date
       %th More Info
   %tbody
     - @movies.each do |movie|
