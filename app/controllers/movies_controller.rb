@@ -33,7 +33,7 @@ class MoviesController < ApplicationController
       logger.debug session[:sortby]
     elsif (session[:sortby]!=nil)
       if session[:cur_ratings]==nil||session[:cur_ratings].empty?
-        @movies=Movie.order(params[:sortby])
+        @movies=Movie.order(session[:sortby])
       else
         @movies=Movie.where('rating IN (?)', session[:cur_ratings]).order(session[:sortby])
       end
