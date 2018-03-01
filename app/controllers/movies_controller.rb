@@ -24,7 +24,7 @@ class MoviesController < ApplicationController
           @query[0]+=" or "
         end
       end
-      logger.debug query[0]
+      logger.debug @query[0]
       @movie=Movie.where(@query)
     else
       logger.debug "no form"
