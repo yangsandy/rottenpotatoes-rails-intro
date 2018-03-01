@@ -14,25 +14,28 @@ class MoviesController < ApplicationController
     @movies = Movie.all
     @all_ratings=Movie.uniq.pluck(:rating).reverse
     
+    if(params[:ratings]!=nil)
+      @cur_ratings=params[:ratings]
+      @query=[""]
+      for r in params[:ratings].keys
+        @query[0]+="rating = ?"
+        @query.push(r)
+        if @query.length-1<params[:ratings].keys.length
+          @query[0]+=" or "
+        end
+      end
+      logger.debug query[0]
+      @movie=Movie.where(@query)
+    else
+      logger.debug "no form"
+    end
+    
     if (params[:sortby]!=nil)
       if @cur_ratings.empty?
         @movies=Movie.order(params[:sortby])
       else
-        @movies=Movie.order(params[:sortby])
+        @movies=Movie.where(@query).order(params[:sortby])
       end
-    end
-    
-    if(params[:ratings]!=nil)
-      @cur_ratings=params[:ratings]
-      temp_movie=[]
-      for movie in @movies
-        if params[:ratings].haskey?(movie[:rating])
-          temp_movie.push(movie)
-        end
-      end
-      @movie=temp_movie
-    else
-      logger.debug "no form"
     end
   end
 
