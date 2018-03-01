@@ -11,8 +11,8 @@
   %thead
     %tr
       -# Reference: https://stackoverflow.com/questions/15979489/give-a-haml-link-an-id
-      %th{:class => @title_header}
-      %a#title_header{:href => "/movies?sort=title"} Movie Title
+      %th#title_header= link_to "Title Date", movies_path(:sort=>'date')
+      -#%a#title_header{:href => "/movies?sort=title"} Movie Title
       %th Rating
       %th{:class => @release_header}= link_to "Release Date", movies_path(:sort=>'date')
       -#%a#release_header{:href => "/movies?sort=release_date"} Release Date
