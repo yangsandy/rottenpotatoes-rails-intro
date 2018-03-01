@@ -12,14 +12,25 @@ class MoviesController < ApplicationController
 
   def index
     @movies = Movie.all
-    @all_ratings=Movie.uniq.pluck(:rating)
+    @all_ratings=Movie.uniq.pluck(:rating).reverse
+    
     if (params[:sortby]!=nil)
-      @movies=Movie.order(params[:sortby])
-    end
-    if(params[:ratings]!=nil)
-      for item in params[:ratings].keys
-        logger.debug item
+      if @cur_ratings.empty?
+        @movies=Movie.order(params[:sortby])
+      else
+        @movies=Movie.order(params[:sortby])
       end
+    end
+    
+    if(params[:ratings]!=nil)
+      @cur_ratings=params[:ratings]
+      temp_movie=[]
+      for movie in @movies
+        if params[:ratings].haskey?(movie[:rating])
+          temp_movie.push(movie)
+        end
+      end
+      @movie=temp_movie
     else
       logger.debug "no form"
     end
@@ -42,6 +53,7 @@ class MoviesController < ApplicationController
   def update
     @movie = Movie.find params[:id]
     @movie.update_attributes!(movie_params)
+    @cur_ratings=[]
     flash[:notice] = "#{@movie.title} was successfully updated."
     redirect_to movie_path(@movie)
   end
