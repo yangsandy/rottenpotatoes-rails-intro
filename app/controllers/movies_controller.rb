@@ -16,10 +16,12 @@ class MoviesController < ApplicationController
     if (params[:sortby]!=nil)
       @movies=Movie.order(params[:sortby])
     end
-    if(params[:ratings_form]!=nil)
-      for item in params[:ratings_form]
+    if(params[:ratings]!=nil)
+      for item in params[:ratings].keys
         logger.debug item
       end
+    else
+      logger.debug "no form"
     end
   end
 
