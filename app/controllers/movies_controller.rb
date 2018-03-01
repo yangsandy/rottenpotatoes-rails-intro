@@ -15,17 +15,9 @@ class MoviesController < ApplicationController
     @all_ratings=Movie.uniq.pluck(:rating).reverse
     
     if(params[:ratings]!=nil)
-      @cur_ratings=params[:ratings]
-      @query=[""]
-      for r in params[:ratings].keys
-        @query[0]+="rating = ?"
-        @query.push(r)
-        if @query.length-1<params[:ratings].keys.length
-          @query[0]+=" or "
-        end
-      end
-      logger.debug @query[0]
-      @movie=Movie.where(@query)
+      @cur_ratings=params[:ratings].keys
+      # source: https://stackoverflow.com/questions/28954500/activerecord-where-field-array-of-possible-values
+      @movie=Movie.where('rating IN (?)', @cur_ratings)
     else
       logger.debug "no form"
     end
@@ -34,7 +26,7 @@ class MoviesController < ApplicationController
       if @cur_ratings.empty?
         @movies=Movie.order(params[:sortby])
       else
-        @movies=Movie.where(@query).order(params[:sortby])
+        @movies=Movie.where('rating IN (?)', @cur_ratings).order(params[:sortby])
       end
     end
   end
