@@ -15,22 +15,26 @@ class MoviesController < ApplicationController
     @all_ratings=Movie.uniq.pluck(:rating).reverse
     
     if(params[:ratings]!=nil)
-      @cur_ratings=params[:ratings].keys
-      # source: https://stackoverflow.com/questions/28954500/activerecord-where-field-array-of-possible-values
-      logger.debug "yes form"
-      logger.debug @cur_ratings[0]
-      @movies=Movie.where('rating IN (?)', @cur_ratings)
+      #@cur_ratings=params[:ratings].keys
+      # reference: https://stackoverflow.com/questions/28954500/activerecord-where-field-array-of-possible-values
+      @movies=Movie.where('rating IN (?)', params[:ratings].keys)
+      session[:cur_ratings]=params[:ratings].keys
     else
       logger.debug "no form"
     end
     
     if (params[:sortby]!=nil)
-      if @cur_ratings==nil||@cur_ratings.empty?
-        logger.debug "regular search"
+      if session[:cur_ratings]==nil||session[:cur_ratings].empty?
         @movies=Movie.order(params[:sortby])
       else
-        logger.debug "conditioned search"
-        @movies=Movie.where('rating IN (?)', @cur_ratings).order(params[:sortby])
+        @movies=Movie.where('rating IN (?)', session[:cur_ratings]).order(params[:sortby])
+      end
+      session[:sortby]=params[:sortby]
+    elsif (session[:sortby]!=nil)
+      if session[:cur_ratings]==nil||session[:cur_ratings].empty?
+        @movies=Movie.order(params[:sortby])
+      else
+        @movies=Movie.where('rating IN (?)', session[:cur_ratings]).order(params[:sortby])
       end
     end
   end
@@ -61,6 +65,7 @@ class MoviesController < ApplicationController
     @movie = Movie.find(params[:id])
     @movie.destroy
     flash[:notice] = "Movie '#{@movie.title}' deleted."
+    session.clear
     redirect_to movies_path
   end
   
