@@ -25,7 +25,7 @@ class MoviesController < ApplicationController
     end
     
     if (params[:sortby]!=nil)
-      if @cur_ratings.empty?
+      if @cur_ratings==nil||@cur_ratings.empty?
         logger.debug "regular search"
         @movies=Movie.order(params[:sortby])
       else
@@ -41,6 +41,7 @@ class MoviesController < ApplicationController
 
   def create
     @movie = Movie.create!(movie_params)
+    @cur_ratings=[]
     flash[:notice] = "#{@movie.title} was successfully created."
     redirect_to movies_path
   end
