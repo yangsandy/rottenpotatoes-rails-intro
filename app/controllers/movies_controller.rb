@@ -12,7 +12,7 @@ class MoviesController < ApplicationController
 
   def index
     @movies = Movie.all
-    @all_ratings=['G','PG','PG-13','R']
+    @all_ratings=Movie.select(:rating).distinct
     if (params[:sortby]!=nil)
       @movies=Movie.order(params[:sortby])
     end
