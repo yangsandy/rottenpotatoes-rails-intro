@@ -12,9 +12,14 @@ class MoviesController < ApplicationController
 
   def index
     @movies = Movie.all
-    @all_ratings=Movie.select(:rating).distinct
+    @all_ratings=Movie.uniq.pluck(:rating)
     if (params[:sortby]!=nil)
       @movies=Movie.order(params[:sortby])
+    end
+    if(params[:ratings_form]!=nil)
+      for item in params[:ratings_form]
+        logger.debug item
+      end
     end
   end
 
