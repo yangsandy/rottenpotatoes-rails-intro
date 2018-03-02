@@ -18,7 +18,7 @@ class MoviesController < ApplicationController
       #@cur_ratings=params[:ratings].keys
       # reference: https://stackoverflow.com/questions/28954500/activerecord-where-field-array-of-possible-values
       if params[:ratings].keys.length>0
-        logger.debug params[:rating].length
+        logger.debug params[:ratings].keys.length
         @movies=Movie.where('rating IN (?)', params[:ratings].keys)
         session[:cur_ratings]=params[:ratings].keys
       end
